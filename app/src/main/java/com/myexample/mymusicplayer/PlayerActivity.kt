@@ -19,8 +19,9 @@ class PlayerActivity : AppCompatActivity(),ServiceConnection {
 
 var isPlaying:Boolean = false
         var musicservice:MusicService? = null
+        lateinit var binding: ActivityPlayerBinding
     }
-    private lateinit var binding: ActivityPlayerBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.coolPink)
@@ -100,13 +101,15 @@ preNextSong(increment = true)
     }
     private fun playMusic()
     {
-binding.playpausebtnPA.setIconResource(R.drawable.pause_icon)
+            binding.playpausebtnPA.setIconResource(R.drawable.pause_icon)
+        musicservice!!.showNotification(false)
         isPlaying = true
         musicservice!!.mediaPlayer!!.start()
     }
     private fun pauseMusic()
     {
         binding.playpausebtnPA.setIconResource(R.drawable.play_icon)
+        musicservice!!.showNotification(true)
         isPlaying=false
         musicservice!!.mediaPlayer!!.pause()
     }

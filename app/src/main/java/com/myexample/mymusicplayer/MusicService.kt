@@ -1,5 +1,6 @@
 package com.myexample.mymusicplayer
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
@@ -29,12 +31,20 @@ class MusicService :Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
      //  mediaSession = MediaSessionCompat(baseContext,"My music")
-        showNotification()
+        showNotification(false)
         return START_STICKY
     }
-    fun showNotification(){
 
+    fun showNotification(playPauseButton:Boolean){
 
+var playpauetext = "some"
+        if(playPauseButton)
+        {
+            playpauetext="PLay"
+        }else
+        {
+            playpauetext="Pause"
+        }
         val prevInt = Intent(baseContext,NotificationReceiver::class.java).setAction(Utils.PREV)
         val prevpendingIntent = PendingIntent.getBroadcast(baseContext,0,prevInt,PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -54,22 +64,33 @@ class MusicService :Service() {
             notificationChannel.description="This is important channel for playing song"
             notificationManager.createNotificationChannel(notificationChannel)
         }
+
+    var remoteViews = RemoteViews(packageName,R.layout.custom_media_view)
   val notification = NotificationCompat.Builder(this,CHANNAL_ID)
       .setContentTitle(PlayerActivity.musicListPA[PlayerActivity.songPostion].title)
       .setContentText(PlayerActivity.musicListPA[PlayerActivity.songPostion].artist)
+      .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+      .setCustomContentView(remoteViews)
       .setSmallIcon(R.drawable.playlisticon)
-      .setLargeIcon(BitmapFactory.decodeResource(resources,R.drawable.splash_screen))
+//      .setLargeIcon(BitmapFactory.decodeResource(resources,R.drawable.splash_screen))
      // .setStyle(androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken))
       .setPriority(NotificationCompat.PRIORITY_DEFAULT)
       .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
       .setOnlyAlertOnce(true)
       .setDefaults(Notification.DEFAULT_ALL)
-      .addAction(R.drawable.previous_icon,"Previous",prevpendingIntent)
-      .addAction(R.drawable.play_icon,"Play",playpendingIntent)
-      .addAction(R.drawable.next_icon,"Next",nextpendingIntent)
-      .addAction(R.drawable.exit_icon,"Exit",exitpendingIntent)
-      .build()
-        startForeground(12,notification)
+
+        remoteViews.setOnClickPendingIntent(R.id.prev_custom_btn,prevpendingIntent)
+        remoteViews.setOnClickPendingIntent(R.id.next_custom_btn,nextpendingIntent)
+        remoteViews.setOnClickPendingIntent(R.id.play_custom_btn,playpendingIntent)
+        remoteViews.setOnClickPendingIntent(R.id.exit_custom_btn,exitpendingIntent)
+
+
+
+
+
+
+
+        startForeground(12,notification.build())
 
     }
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   android:weightSum="100"
+    android:orientation="horizontal">
+
+
+<ImageButton
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="25"
+    android:id="@+id/prev_custom_btn"
+    android:background="@android:color/transparent"
+    android:contentDescription="@string/prevnotfication"
+    android:src="@drawable/previous_icon"/>
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:id="@+id/play_custom_btn"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/playnotfication"
+        android:src="@drawable/play_icon"/>
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:id="@+id/next_custom_btn"
+        android:contentDescription="@string/nextnotfication"
+        android:background="@android:color/transparent"
+        android:src="@drawable/next_icon"/>
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:id="@+id/exit_custom_btn"
+        android:contentDescription="@string/exitnotfication"
+        android:background="@android:color/transparent"
+        android:src="@drawable/exit_icon"/>
+    </LinearLayout>
