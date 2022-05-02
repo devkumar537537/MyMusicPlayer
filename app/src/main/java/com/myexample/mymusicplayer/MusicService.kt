@@ -6,9 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
-import android.os.Binder
-import android.os.Build
-import android.os.IBinder
+import android.os.*
 import android.support.v4.media.session.MediaSessionCompat
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
@@ -19,7 +17,7 @@ class MusicService :Service() {
    private var myBinder=MyBinder()
     var mediaPlayer:MediaPlayer? = null
 //private lateinit var mediaSession:MediaSessionCompat
-
+private lateinit var  runnable :Runnable
     override fun onBind(intent: Intent?): IBinder? {
      return myBinder
     }
@@ -66,13 +64,22 @@ var playpauetext = "some"
         }
 
     var remoteViews = RemoteViews(packageName,R.layout.custom_media_view)
+
+        val imgArt = getImageArt(PlayerActivity.musicListPA[PlayerActivity.songPostion].path)
+       val image = if(imgArt != null)
+        {
+            BitmapFactory.decodeByteArray(imgArt,0,imgArt.size)
+        }else{
+            BitmapFactory.decodeResource(resources,R.drawable.splash_screen)
+        }
   val notification = NotificationCompat.Builder(this,CHANNAL_ID)
       .setContentTitle(PlayerActivity.musicListPA[PlayerActivity.songPostion].title)
       .setContentText(PlayerActivity.musicListPA[PlayerActivity.songPostion].artist)
       .setStyle(NotificationCompat.DecoratedCustomViewStyle())
       .setCustomContentView(remoteViews)
       .setSmallIcon(R.drawable.playlisticon)
-//      .setLargeIcon(BitmapFactory.decodeResource(resources,R.drawable.splash_screen))
+
+   .setLargeIcon(image)
      // .setStyle(androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken))
       .setPriority(NotificationCompat.PRIORITY_DEFAULT)
       .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -94,8 +101,41 @@ var playpauetext = "some"
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        stopSelf()
+     fun createMedaiaPlayer()
+    {
+        try {
+
+
+            if (PlayerActivity.musicservice!!.mediaPlayer == null) {
+                PlayerActivity.musicservice!!.mediaPlayer = MediaPlayer()
+            } else {
+                PlayerActivity.musicservice!!.mediaPlayer!!.reset()
+                PlayerActivity.musicservice!!.mediaPlayer!!.setDataSource(
+                    PlayerActivity.musicListPA.get(
+                        PlayerActivity.songPostion
+                    ).path)
+                PlayerActivity.musicservice!!.mediaPlayer!!.prepare()
+
+                PlayerActivity.binding.playpausebtnPA.setIconResource(R.drawable.pause_icon)
+                PlayerActivity.musicservice!!.showNotification(false)
+                PlayerActivity.binding.tvSeekBarstart.text = formatDuration(PlayerActivity.musicservice!!.mediaPlayer!!.currentPosition.toLong())
+                PlayerActivity.binding.tvseekbarend.text = formatDuration(PlayerActivity.musicservice!!.mediaPlayer!!.duration.toLong())
+                PlayerActivity.binding.seekBarPA.progress = 0
+                PlayerActivity.binding.seekBarPA.max = PlayerActivity.musicservice!!.mediaPlayer!!.duration
+            }
+        }catch (e:Exception)
+        {
+            return
+        }
+    }
+    fun seekBarSetup()
+    {
+        runnable = Runnable{
+            PlayerActivity.binding.tvSeekBarstart.text = formatDuration(mediaPlayer!!.currentPosition.toLong())
+            PlayerActivity.binding.seekBarPA.progress = mediaPlayer!!.currentPosition
+        Handler(Looper.getMainLooper()).postDelayed(runnable,200)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable,0)
+
     }
 }

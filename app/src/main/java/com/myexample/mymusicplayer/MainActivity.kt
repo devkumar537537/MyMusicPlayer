@@ -233,4 +233,15 @@ private fun getAllAudio():ArrayList<MusicModel>{
 
     return templist
 }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(!PlayerActivity.isPlaying && PlayerActivity.musicservice != null)
+        {
+            PlayerActivity.musicservice!!.stopForeground(true)
+            PlayerActivity.musicservice!!.mediaPlayer!!.release()
+            PlayerActivity.musicservice = null
+            exitProcess(1)
+        }
+    }
 }

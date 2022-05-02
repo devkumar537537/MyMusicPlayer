@@ -19,9 +19,10 @@
 
     <ImageButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@android:color/transparent"
        android:src="@drawable/backicon"
+        android:id="@+id/backbtnPA"
         android:layout_marginStart="10dp"
         app:tint="@color/black"
         android:contentDescription="@string/back_btn"
@@ -118,13 +119,14 @@ android:layout_margin="12dp"
     android:layout_height="match_parent"
     android:textColor="@color/black"
     android:text="@string/start_tv"
+    android:id="@+id/tvSeekBarstart"
 android:textSize="15sp"
     android:gravity="center"
     />
         <androidx.appcompat.widget.AppCompatSeekBar
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
+android:id="@+id/seekBarPA"
               android:layout_weight="1"
             tools:ignore="NestedWeights" />
         <TextView
@@ -133,6 +135,7 @@ android:textSize="15sp"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:text="@string/end_tv"
+            android:id="@+id/tvseekbarend"
             android:gravity="center"
             />
 
@@ -147,6 +150,7 @@ android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/repeat_icon"
+            android:id="@+id/repeatBtnPA"
             android:background="@android:color/transparent"
             android:layout_marginEnd="5dp"
             android:contentDescription="@string/repeat_btn"
